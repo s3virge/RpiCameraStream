@@ -31,7 +31,7 @@ The app captures MJPEG frames from the CSI camera using `rpicam-vid` (or `libcam
 │  CameraService (parse JPEG frames)           │
 │      │                                       │
 │      ├──► /api/camera/stream  (MJPEG)        │
-│      ├──► /api/camera/snapshot (JPEG)         │
+│      ├──► /api/camera/snapshot (JPEG)        │
 │      └──► Blazor UI (/)                      │
 │                                              │
 │  Kestrel HTTP on port 5000                   │
