@@ -1,0 +1,93 @@
+@page "/"
+@using RpiCameraStream.Services
+@inject CameraService CameraService
+@implements IDisposable
+
+<PageTitle>📹 RPi Camera Stream</PageTitle>
+
+<div class="camera-container">
+    <div class="camera-header">
+        <h1>📹 Raspberry Pi Camera</h1>
+        <div class="status-badge @(CameraService.IsCameraRunning ? "status-online" : "status-offline")">
+            <span class="status-dot"></span>
+            @(CameraService.IsCameraRunning ? "LIVE" : "OFFLINE")
+        </div>
+    </div>
+
+    <div class="video-wrapper">
+        @if (CameraService.IsCameraRunning)
+        {
+            <img src="/api/camera/stream"
+                 alt="Live Camera Feed"
+                 class="video-feed" />
+        }
+        else
+        {
+            <div class="video-placeholder">
+                <div class="placeholder-content">
+                    <span class="placeholder-icon">📷</span>
+                    <p>Camera is offline</p>
+                    <p class="placeholder-hint">Waiting for the CSI camera to become available...</p>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="controls-panel">
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Resolution</span>
+                <span class="info-value">@(CameraService.Width)×@(CameraService.Height)</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">FPS</span>
+                <span class="info-value">@CameraService.Framerate</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Quality</span>
+                <span class="info-value">@CameraService.Quality%</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">H-Flip</span>
+                <span class="info-value">@(CameraService.HFlip ? "On" : "Off")</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">V-Flip</span>
+                <span class="info-value">@(CameraService.VFlip ? "On" : "Off")</span>
+            </div>
+        </div>
+
+        <div class="links-section">
+            <h3>Direct Links</h3>
+            <div class="link-buttons">
+                <a href="/api/camera/stream" target="_blank" class="btn btn-primary">
+                    🎬 MJPEG Stream
+                </a>
+                <a href="/api/camera/snapshot" target="_blank" class="btn btn-secondary">
+                    📸 Snapshot
+                </a>
+                <a href="/api/camera/status" target="_blank" class="btn btn-outline-info">
+                    ℹ️ Status API
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Timer? _statusTimer;
+
+    protected override void OnInitialized()
+    {
+        // Periodically refresh the status display
+        _statusTimer = new Timer(_ =>
+        {
+            InvokeAsync(StateHasChanged);
+        }, null, 0, 2000);
+    }
+
+    public void Dispose()
+    {
+        _statusTimer?.Dispose();
+    }
+}

@@ -1,0 +1,9 @@
+.app-layout {
+    min-height: 100vh;
+    background: #0d1117;
+    color: #e0e0e0;
+}
+
+.main-content {
+    padding: 1rem;
+}
