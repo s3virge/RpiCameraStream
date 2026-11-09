@@ -189,20 +189,17 @@ sudo journalctl -u rpicamerastream.service -f
 
 ## License
 
-MIT
-#   R p i C a m e r a S t r e a m 
-
 
 -------------------------------------------------------------------------------------------
-1. Створення файлу служби (демона)
+## 1. Створення файлу служби (демона)
 Відкрийте термінал на Raspberry Pi та створіть файл конфігурації з унікальною назвою (наприклад, rpi-camera.service):
-
-Bash
+```bash
 sudo nano /etc/systemd/system/rpi-camera.service
+```
+
 2. Заповнення конфігурації
 Вставте наступний шаблон. Обов'язково перевірте та змініть шляхи під свій реальний проєкт та ім'я користувача (якщо у вас не стандартний pi):
-
-Ini, TOML
+```bash
 [Unit]
 Description=Blazor Raspberry Pi Camera Service
 After=network.target
@@ -220,6 +217,8 @@ SyslogIdentifier=rpi-camera
 
 [Install]
 WantedBy=multi-user.target
+```
+
 WorkingDirectory — шлях до папки, де лежить ваш зібраний .NET проєкт.
 
 ExecStart — повний шлях до dotnet та шлях до вашої зібраної .dll файлу програми.
@@ -232,31 +231,32 @@ Restart=always — говорить системі автоматично пер
 Після створення файлу потрібно повідомити систему systemd про новий сервіс та активувати його:
 
 Оновіть конфігурацію systemd:
-
-Bash
+```bash
 sudo systemctl daemon-reload
+```
 Увімкніть автозапуск програми при кожному вмиканні Raspberry Pi:
-
-Bash
+```bash
 sudo systemctl enable rpi-camera.service
+```
+
 Запустіть демон просто зараз, не чекаючи перезавантаження:
-
-Bash
+```bash
 sudo systemctl start rpi-camera.service
-4. Перевірка статусу та логів
-Щоб переконатися, що все працює коректно і демон активний:
+```
 
-Bash
+## 4. Перевірка статусу та логів
+Щоб переконатися, що все працює коректно і демон активний:
+```bash
 sudo systemctl status rpi-camera.service
+```
 Якщо ви побачите зелений напис active (running), значить ваша програма успішно працює у фоновому режимі як демон!
 
 Переглянути логи програми в реальному часі:
-
-Bash
+```bash
 sudo journalctl -u rpi-camera.service -f
-Зупинити програму:
+```
 
-Bash
+Зупинити програму:
+```bash
 sudo systemctl stop rpi-camera.service
- 
- 
+```
